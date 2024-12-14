@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faceplant Finance 💀❄️</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        header {
+            background: linear-gradient(90deg, #2c2c2c, #4a4a4a);
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 3em;
+            color: #00d9ff;
+        }
+        header p {
+            font-size: 1.2em;
+            color: #cccccc;
+        }
+        .content {
+            padding: 40px;
+            text-align: center;
+        }
+        .content h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        .feature {
+            background: #292929;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .feature h3 {
+            font-size: 1.5em;
+            color: #ffa726;
+        }
+        .feature p {
+            font-size: 1em;
+            color: #dddddd;
+        }
+        .cta {
+            background: #00d9ff;
+            color: #1a1a1a;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .cta:hover {
+            background: #0096cc;
+        }
+        footer {
+            background: #2c2c2c;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #aaaaaa;
+        }
+        footer a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .game-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        #gameCanvas {
+            background: #292929;
+            border: 2px solid #00d9ff;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Faceplant Finance 💀❄️</h1>
+        <p>The only coin that rewards you for falling flat on your face.</p>
+    </header>
+
+    <div class="content">
+        <h2>Why Choose $FPLNT?</h2>
+        <div class="features">
+            <div class="feature">
+                <h3>Fall-to-Earn (F2E)</h3>
+                <p>Every time your portfolio tanks, we reward you with Consolation Coins. The bigger the fall, the bigger the payout!</p>
+            </div>
+            <div class="feature">
+                <h3>Black Ice Burn System</h3>
+                <p>2% of every transaction is burned, symbolizing the cold, hard truth of life: everything slips away eventually.</p>
+            </div>
+            <div class="feature">
+                <h3>Meme-Powered Community</h3>
+                <p>Join the funniest crypto crowd online. Share your shoveling stories, vote on memes, and win hilarious rewards.</p>
+            </div>
+            <div class="feature">
+                <h3>Dark Humor NFTs</h3>
+                <p>Collect limited-edition NFTs like "Steve vs. the Semi-Truck of Ice" and "Certified Idiot."</p>
+            </div>
+        </div>
+        <button class="cta">Buy $FPLNT Now</button>
+
+        <div class="game-container">
+            <h2>Play the Faceplant Frenzy Mini-Game!</h2>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <p>Help Steve avoid the black ice patches and collect shovels for extra points!</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Faceplant Finance. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let steve = { x: 200, y: 350, width: 30, height: 30, color: '#ff6b6b' };
+        let shovels = [];
+        let blackIce = [];
+        let score = 0;
+        let gameRunning = true;
+
+        function drawSteve() {
+            ctx.fillStyle = steve.color;
+            ctx.fillRect(steve.x, steve.y, steve.width, steve.height);
+        }
+
+        function createShovel() {
+            shovels.push({ x: Math.random() * 370, y: 0, width: 20, height: 20, color: '#00d9ff' });
+        }
+
+        function createBlackIce() {
+            blackIce.push({ x: Math.random() * 370, y: 0, width: 40, height: 10, color: '#333333' });
+        }
+
+        function drawItems(items) {
+            items.forEach(item => {
+                ctx.fillStyle = item.color;
+                ctx.fillRect(item.x, item.y, item.width, item.height);
+            });
+        }
+
+        function updateItems(items) {
+            items.forEach(item => {
+                item.y += 2;
+            });
+        }
+
+        function checkCollisions(items, onCollision) {
+            items.forEach((item, index) => {
+                if (
+                    steve.x < item.x + item.width &&
+                    steve.x + steve.width > item.x &&
+                    steve.y < item.y + item.height &&
+                    steve.y + steve.height > item.y
+                ) {
+                    onCollision(index);
+                }
+            });
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawSteve();
+            drawItems(shovels);
+            drawItems(blackIce);
+
+            updateItems(shovels);
+            updateItems(blackIce);
+
+            checkCollisions(shovels, index => {
+                shovels.splice(index, 1);
+                score += 10;
+            });
+
+            checkCollisions(blackIce, () => {
+                gameRunning = false;
+                alert(`Game Over! Your score: ${score}`);
+            });
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft' && steve.x > 0) steve.x -= 20;
+            if (e.key === 'ArrowRight' && steve.x < canvas.width - steve.width) steve.x += 20;
+        });
+
+        setInterval(createShovel, 1000);
+        setInterval(createBlackIce, 1500);
+
+        gameLoop();
+    </script>
+</body>
+</html>
